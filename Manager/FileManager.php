@@ -99,7 +99,7 @@ class FileManager extends ContainerAware
     /**
      * @param UploadParametersHolder[] $holders
      */
-    public function removeFilesOfEntity(array $holders)
+    public function removeByHolders(array $holders)
     {
         foreach ($holders as $holder) {
             $fullPath = $this->baseUploadDir . DIRECTORY_SEPARATOR . $holder->getValue();

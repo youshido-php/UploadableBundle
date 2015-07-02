@@ -3,27 +3,31 @@ parameters:
     youshido.uploadable.base_upload_dir: %kernel.root_dir%/../web
 
 services:
-    uploadable.reader:
+    youshido.uploadable.reader:
         class: Youshido\UploadableBundle\Annotations\Reader\UploadableReader
 
-    uploadable.namer:
+    youshido.uploadable.namer:
         class: %youshido.uploadable.namer%
 
-    uploadable.file_manager:
+    youshido.uploadable.file_manager:
         class: Youshido\UploadableBundle\Manager\FileManager
-        arguments: [ @uploadable.namer ]
+        arguments: [ @youshido.uploadable.namer ]
         calls:
             - [ setBaseUploadDir, [%youshido.uploadable.base_upload_dir%] ]
             - [ setContainer, [@service_container]]
 
-    uploadable.listener:
+    youshido.uploadable.enity_manager:
+        class: Youshido\UploadableBundle\Manager\EntityManager
+        arguments: [@youshido.uploadable.reader, @youshido.uploadable.file_manager]
+
+    youshido.uploadable.listener:
         class: Youshido\UploadableBundle\Listener\UploadableListener
-        arguments: [ @uploadable.reader, @uploadable.file_manager ]
+        arguments: [ @youshido.uploadable.reader, @youshido.uploadable.file_manager ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    uploadable.form.type.youshido_file:
+    youshido.uploadable.form.type.youshido_file:
         class: Youshido\UploadableBundle\Type\FileType
-        arguments: [ @uploadable.reader, @validator ]
+        arguments: [ @youshido.uploadable.reader, @validator ]
         tags:
           - { name: form.type, alias: youshido_file }
