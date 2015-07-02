@@ -18,6 +18,13 @@ final class Uploadable extends Annotation
     /** @var  string */
     public $uploadDir = false;
 
+    /**
+     * @var string
+     *
+     * Used when upload dir is not define, is other case used upload dir
+     */
+    public $prefix = 'uploads';
+
     /** @var array  */
     public $asserts = [];
 
@@ -71,4 +78,22 @@ final class Uploadable extends Annotation
     {
         $this->override = $override;
     }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @param string $prefix
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+
 }

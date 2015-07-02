@@ -1,6 +1,6 @@
 parameters:
     youshido.uploadable.namer: Youshido\UploadableBundle\Tools\Namer\Md5HashNamer
-    youshido.uploadable.base_upload_dir: %kernel.root_dir%/../web/uploads
+    youshido.uploadable.base_upload_dir: %kernel.root_dir%/../web
 
 services:
     uploadable.reader:

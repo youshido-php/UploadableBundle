@@ -73,6 +73,8 @@ class FileManager extends ContainerAware
         }else{
             $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())).DIRECTORY_SEPARATOR.Inflector::tableize($holder->getPropertyName());
             $entityUploadDir = str_replace('\\', DIRECTORY_SEPARATOR, $entityUploadDir);
+
+            $entityUploadDir = trim($holder->getAnnotation()->getPrefix(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $entityUploadDir;
         }
 
         $directory = trim($entityUploadDir, '/') . DIRECTORY_SEPARATOR . $directory;
