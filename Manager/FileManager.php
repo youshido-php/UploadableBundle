@@ -9,6 +9,7 @@ namespace Youshido\UploadableBundle\Manager;
 
 
 use Doctrine\Common\EventArgs;
+use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -66,7 +67,15 @@ class FileManager extends ContainerAware
     private function processOne(UploadParametersHolder $holder)
     {
         $directory = $this->namer->getDirectory($holder);
-        $directory = trim($holder->getAnnotation()->getUploadDir(), '/') . DIRECTORY_SEPARATOR . $directory;
+
+        if($holder->getAnnotation()->getUploadDir()){
+            $entityUploadDir = $holder->getAnnotation()->getUploadDir();
+        }else{
+            $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())).DIRECTORY_SEPARATOR.Inflector::tableize($holder->getPropertyName());
+            $entityUploadDir = str_replace('\\', DIRECTORY_SEPARATOR, $entityUploadDir);
+        }
+
+        $directory = trim($entityUploadDir, '/') . DIRECTORY_SEPARATOR . $directory;
 
         $name = $this->namer->getName($holder);
 

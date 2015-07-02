@@ -14,7 +14,7 @@ use Youshido\UploadableBundle\Holder\UploadParametersHolder;
 class UploadableReader
 {
 
-    private $annotationClass = 'UploadableBundle\Annotations\Uploadable';
+    private $annotationClass = 'Youshido\UploadableBundle\Annotations\Uploadable';
 
     /**
      * @param $object

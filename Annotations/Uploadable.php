@@ -16,7 +16,7 @@ use Doctrine\Common\Annotations\Annotation;
 final class Uploadable extends Annotation
 {
     /** @var  string */
-    public $uploadDir;
+    public $uploadDir = false;
 
     /** @var array  */
     public $asserts = [];
