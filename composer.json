@@ -22,5 +22,8 @@
     "symfony/form": "~2.3",
     "youshido/uploadable": "dev-develope"
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": { "Youshido\\UploadableBundle\\": "" }
+  }
 }
