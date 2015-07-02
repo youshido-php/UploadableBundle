@@ -25,7 +25,7 @@ class Post
      * @Youshido\Uploadable(override="true", asserts={@Assert\File(
      *     maxSize = "1024k",
      *     mimeTypes = {"image/jpeg"},
-     *     mimeTypesMessage = "Please upload a valid PDF"
+     *     mimeTypesMessage = "Please upload a valid Image"
      * )})
      */
     private $path;
@@ -53,8 +53,9 @@ if($form->isValid()){
 ``` php
 if($request->getMethod() == 'POST'){
     if($file = $request->files->get('path')){
-        if($post = $this->getDoctrine()->getRepository('AppBundle:Post')->find(37)){
-            $this->get('youshido.uploadable.enity_manager')->saveFile($post, 'path', $file, true);
+        if($post = $this->getDoctrine()->getRepository('AppBundle:Post')->find($id)){
+            $this->get('youshido.uploadable.enity_manager')
+                ->saveFile($post, 'path', $file, true);
         }
     }
 }
