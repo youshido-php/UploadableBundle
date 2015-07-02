@@ -2,7 +2,7 @@
   "name": "youshido/uploadable",
   "type": "symfony-bundle",
   "description": "Bundle for easy integrations upload properties to entity",
-  "keywords": ["Upload files"],
+  "keywords": ["upload", "file uploads", "symfony", "file", "form", "bundle"],
   "homepage": "https://github.com/Youshido/UploadableBundle",
   "license": "MIT",
   "authors": [
