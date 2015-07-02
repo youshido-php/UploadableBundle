@@ -12,6 +12,7 @@ use Doctrine\Common\EventArgs;
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Youshido\UploadableBundle\Holder\UploadParametersHolder;
 use Youshido\UploadableBundle\Tools\Namer\NamerInterface;
@@ -33,55 +34,77 @@ class FileManager extends ContainerAware
      * @param UploadParametersHolder[] $holders
      * @param EventArgs|PreUpdateEventArgs $args
      */
-    public function process(array $holders, EventArgs $args)
+    public function processFromListener(array $holders, EventArgs $args)
     {
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
         foreach ($holders as $holder) {
-            $entity = $holder->getEntity();
-
-            $isOverride = false;
+            $originalPath = false;
             if ($holder->getAnnotation()->isOverride() && ($id = $holder->getEntity()->getId())) {
                 $changeSet = $args->getEntityChangeSet();
 
                 if ($changeSet && array_key_exists($holder->getPropertyName(), $changeSet)) {
                     $originalPath = $changeSet[$holder->getPropertyName()][0];
-
-                    $directory = dirname($originalPath);
-                    $name = basename($originalPath);
-
-                    $relativePath = $this->moveFile($holder, $directory, $name);
-
-                    $isOverride = true;
                 }
             }
 
-            if(!$isOverride){
-                $relativePath = $this->processOne($holder);
-            }
-
-            $propertyAccessor->setValue($entity, $holder->getPropertyName(), $relativePath);
+            $this->processOne($holder, $originalPath);
         }
     }
 
-    private function processOne(UploadParametersHolder $holder)
+    /**
+     * @param UploadParametersHolder $holder
+     * @param string|boolean $beforeValue
+     */
+    public function processOne(UploadParametersHolder $holder, $beforeValue = false)
     {
-        $directory = $this->namer->getDirectory($holder);
+        $isOverride = false;
+        if($beforeValue && file_exists($beforeValue)){
+            $directory = dirname($beforeValue);
+            $name = basename($beforeValue);
 
-        if($holder->getAnnotation()->getUploadDir()){
-            $entityUploadDir = $holder->getAnnotation()->getUploadDir();
-        }else{
-            $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())).DIRECTORY_SEPARATOR.Inflector::tableize($holder->getPropertyName());
-            $entityUploadDir = str_replace('\\', DIRECTORY_SEPARATOR, $entityUploadDir);
+            $this->moveFile($holder, $directory, $name);
 
-            $entityUploadDir = trim($holder->getAnnotation()->getPrefix(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $entityUploadDir;
+            $isOverride = true;
+
+            $this->updateEntityValue($holder, $beforeValue);
         }
 
-        $directory = trim($entityUploadDir, '/') . DIRECTORY_SEPARATOR . $directory;
+        if(!$isOverride){
+            if($relativePath = $this->generatePathAndSave($holder)){
+                $this->updateEntityValue($holder, $relativePath);
+            }
+        }
+    }
 
-        $name = $this->namer->getName($holder);
+    private function updateEntityValue(UploadParametersHolder $holder, $value)
+    {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $entity = $holder->getEntity();
 
-        return $this->moveFile($holder, $directory, $name);
+        $propertyAccessor->setValue($entity, $holder->getPropertyName(), $value);
+    }
+
+    private function generatePathAndSave(UploadParametersHolder $holder)
+    {
+        if($holder->getValue() && $holder->getValue() instanceof UploadedFile){
+            $directory = $this->namer->getDirectory($holder);
+
+            if($holder->getAnnotation()->getUploadDir()){
+                $entityUploadDir = $holder->getAnnotation()->getUploadDir();
+            }else{
+                $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())).DIRECTORY_SEPARATOR.Inflector::tableize($holder->getPropertyName());
+                $entityUploadDir = str_replace('\\', DIRECTORY_SEPARATOR, $entityUploadDir);
+
+                $entityUploadDir = trim($holder->getAnnotation()->getPrefix(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $entityUploadDir;
+            }
+
+            $directory = trim($entityUploadDir, '/') . DIRECTORY_SEPARATOR . $directory;
+
+            $name = $this->namer->getName($holder);
+
+            return $this->moveFile($holder, $directory, $name);
+        }
+
+        return false;
     }
 
     private function moveFile(UploadParametersHolder $holder, $directory, $name)

@@ -29,13 +29,14 @@ class UploadableReader
 
         foreach($reflectionObj->getProperties() as $property)
         {
+            /** @var Uploadable $annotation */
             $annotation = $reader->getPropertyAnnotation($property, $this->annotationClass);
 
             if($annotation){
                 $property->setAccessible(true);
                 $value = $property->getValue($object);
 
-                if($value){
+                if($value !== false){
                     $holder = new UploadParametersHolder();
 
                     $holder
@@ -66,8 +67,4 @@ class UploadableReader
         return $reader->getPropertyAnnotation($propertyReflection, $this->annotationClass);
     }
 
-    public function getHolders()
-    {
-        return $this->holders;
-    }
 }

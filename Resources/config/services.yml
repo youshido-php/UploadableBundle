@@ -19,6 +19,8 @@ services:
     youshido.uploadable.enity_manager:
         class: Youshido\UploadableBundle\Manager\EntityManager
         arguments: [@youshido.uploadable.reader, @youshido.uploadable.file_manager]
+        calls:
+            - [ setContainer, [@service_container]]
 
     youshido.uploadable.listener:
         class: Youshido\UploadableBundle\Listener\UploadableListener

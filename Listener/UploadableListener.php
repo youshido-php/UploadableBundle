@@ -61,7 +61,7 @@ class UploadableListener implements EventSubscriber
             $holders = $this->reader->readAndReturnHolders($entity);
 
             if($holders && is_array($holders)){
-                $this->fileManager->process($holders, $args);
+                $this->fileManager->processFromListener($holders, $args);
             }
         }
     }
