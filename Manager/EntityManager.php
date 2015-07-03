@@ -27,7 +27,7 @@ class EntityManager extends ContainerAware
 
     public function __construct(UploadableReader $reader, FileManager $fileManager)
     {
-        $this->reader = $reader;
+        $this->reader      = $reader;
         $this->fileManager = $fileManager;
     }
 
@@ -35,7 +35,7 @@ class EntityManager extends ContainerAware
     {
         $holders = $this->reader->readAndReturnHolders($entity);
 
-        if($holders && is_array($holders)){
+        if ($holders && is_array($holders)) {
             $this->fileManager->removeByHolders($holders);
         }
     }
@@ -44,10 +44,10 @@ class EntityManager extends ContainerAware
     {
         $holders = $this->reader->readAndReturnHolders($entity);
 
-        if($holders && is_array($holders)){
-            foreach($holders as $holder){
+        if ($holders && is_array($holders)) {
+            foreach ($holders as $holder) {
                 /** @var UploadParametersHolder $holder */
-                if($holder->getPropertyName() == $property){
+                if ($holder->getPropertyName() == $property) {
                     $this->fileManager->removeByHolders([$holder]);
 
                     break;
@@ -59,13 +59,14 @@ class EntityManager extends ContainerAware
 
     public function saveFile($entity, $property, UploadedFile $uploadedFile, $usePersist = false)
     {
+        if (!$uploadedFile) return false;
         $holders = $this->reader->readAndReturnHolders($entity);
 
-        if($holders && is_array($holders)){
-            foreach($holders as $holder){
+        if ($holders && is_array($holders)) {
+            foreach ($holders as $holder) {
                 /** @var UploadParametersHolder $holder */
 
-                if($holder->getPropertyName() == $property){
+                if ($holder->getPropertyName() == $property) {
                     $holder->setValue($uploadedFile);
 
                     $propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -75,7 +76,7 @@ class EntityManager extends ContainerAware
             }
         }
 
-        if($usePersist){
+        if ($usePersist) {
             $this->container->get('doctrine.orm.entity_manager')->persist($entity);
             $this->container->get('doctrine.orm.entity_manager')->flush();
         }
