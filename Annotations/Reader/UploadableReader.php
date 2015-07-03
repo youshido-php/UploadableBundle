@@ -60,11 +60,15 @@ class UploadableReader
      */
     public function readAnnotationOfProperty($class, $property)
     {
-        $reader = new AnnotationReader();
+        try{
+            $reader = new AnnotationReader();
 
-        $propertyReflection = new \ReflectionProperty($class, $property);
+            $propertyReflection = new \ReflectionProperty($class, $property);
 
-        return $reader->getPropertyAnnotation($propertyReflection, $this->annotationClass);
+            return $reader->getPropertyAnnotation($propertyReflection, $this->annotationClass);
+        }catch (\Exception $e){
+            return null;
+        }
     }
 
 }
