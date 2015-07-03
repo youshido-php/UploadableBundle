@@ -48,7 +48,9 @@ class FileType extends AbstractType
                 $data = $form->getData();
                 $config = $form->getConfig();
 
-                $annotation = $reader->readAnnotationOfProperty($options['entity_class'], $config->getName());
+                $name = array_key_exists('entity_property', $options) && $options['entity_property'] ? $options['entity_property'] : $config->getName();
+
+                $annotation = $reader->readAnnotationOfProperty($options['entity_class'], $name);
 
                 if ($annotation && is_array($annotation->getAsserts())) {
                     $errors = $this->validator->validate($data, $annotation->getAsserts());
@@ -65,10 +67,10 @@ class FileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setRequired(['entity_class']);
-//
-//        $this->setDefaultOptions([
-////            '' =>
-//        ]);
+
+        $resolver->setDefaults([
+            'entity_property' => false
+        ]);
     }
 
     public function getParent()

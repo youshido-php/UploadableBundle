@@ -59,7 +59,9 @@ class FileManager extends ContainerAware
         $isOverride = false;
         if($beforeValue && file_exists($beforeValue)){
             $directory = dirname($beforeValue);
-            $name = basename($beforeValue);
+            $name = $this->namer->getName($holder); //generating only new file name
+
+            $this->removeFile($beforeValue);
 
             $this->moveFile($holder, $directory, $name);
 
