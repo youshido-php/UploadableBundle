@@ -12,7 +12,8 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\File\File;
 
-class FileTypeDataTransformer implements  DataTransformerInterface{
+class FileTypeDataTransformer implements DataTransformerInterface
+{
 
     /**
      * Transforms a value from the original representation to a transformed representation.
@@ -43,7 +44,7 @@ class FileTypeDataTransformer implements  DataTransformerInterface{
      */
     public function transform($value)
     {
-        if($value && is_string($value) && is_file($value)){
+        if ($value && is_string($value) && is_file($value)) {
             return new File($value);
         }
 
