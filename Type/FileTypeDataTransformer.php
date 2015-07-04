@@ -44,8 +44,12 @@ class FileTypeDataTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        if ($value && is_string($value) && is_file($value)) {
-            return new File($value);
+        if ($value && is_string($value)) {
+            if (is_file($value)) {
+                return new File($value);
+            } else {
+                return null;
+            }
         }
 
         return $value;
