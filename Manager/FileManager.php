@@ -31,7 +31,7 @@ class FileManager extends ContainerAware
     }
 
     /**
-     * @param UploadParametersHolder[] $holders
+     * @param UploadParametersHolder[]     $holders
      * @param EventArgs|PreUpdateEventArgs $args
      */
     public function processFromListener(array $holders, EventArgs $args)
@@ -52,26 +52,19 @@ class FileManager extends ContainerAware
 
     /**
      * @param UploadParametersHolder $holder
-     * @param string|boolean $beforeValue
+     * @param string|boolean         $beforeValue
      */
     public function processOne(UploadParametersHolder $holder, $beforeValue = false)
     {
-        $isOverride = false;
-        if($beforeValue && file_exists($beforeValue)){
+        if ($beforeValue && file_exists($beforeValue)) {
             $directory = dirname($beforeValue);
-            $name = $this->namer->getName($holder); //generating only new file name
+            $name      = $this->namer->getName($holder); //generating only new file name
 
             $this->removeFile($beforeValue);
 
-            $this->moveFile($holder, $directory, $name);
-
-            $isOverride = true;
-
-            $this->updateEntityValue($holder, $beforeValue);
-        }
-
-        if(!$isOverride){
-            if($relativePath = $this->generatePathAndSave($holder)){
+            $this->updateEntityValue($holder, $this->moveFile($holder, $directory, $name));
+        } else {
+            if ($relativePath = $this->generatePathAndSave($holder)) {
                 $this->updateEntityValue($holder, $relativePath);
             }
         }
@@ -80,20 +73,20 @@ class FileManager extends ContainerAware
     private function updateEntityValue(UploadParametersHolder $holder, $value)
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
-        $entity = $holder->getEntity();
+        $entity           = $holder->getEntity();
 
         $propertyAccessor->setValue($entity, $holder->getPropertyName(), $value);
     }
 
     private function generatePathAndSave(UploadParametersHolder $holder)
     {
-        if($holder->getValue() && $holder->getValue() instanceof UploadedFile){
+        if ($holder->getValue() && $holder->getValue() instanceof UploadedFile) {
             $directory = $this->namer->getDirectory($holder);
 
-            if($holder->getAnnotation()->getUploadDir()){
+            if ($holder->getAnnotation()->getUploadDir()) {
                 $entityUploadDir = $holder->getAnnotation()->getUploadDir();
-            }else{
-                $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())).DIRECTORY_SEPARATOR.Inflector::tableize($holder->getPropertyName());
+            } else {
+                $entityUploadDir = Inflector::tableize(get_class($holder->getEntity())) . DIRECTORY_SEPARATOR . Inflector::tableize($holder->getPropertyName());
                 $entityUploadDir = str_replace('\\', DIRECTORY_SEPARATOR, $entityUploadDir);
 
                 $entityUploadDir = trim($holder->getAnnotation()->getPrefix(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $entityUploadDir;
