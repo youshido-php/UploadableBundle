@@ -59,7 +59,6 @@ class EntityManager extends ContainerAware
 
     public function saveFile($entity, $property, UploadedFile $uploadedFile, $usePersist = false)
     {
-        if (!$uploadedFile) return false;
         $holders = $this->reader->readAndReturnHolders($entity);
 
         if ($holders && is_array($holders)) {
