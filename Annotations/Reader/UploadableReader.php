@@ -36,7 +36,8 @@ class UploadableReader
                 $property->setAccessible(true);
                 $value = $property->getValue($object);
 
-                if($value !== false){
+                // todo: check the reason for that if
+                //if($value !== false){
                     $holder = new UploadParametersHolder();
 
                     $holder
@@ -46,7 +47,7 @@ class UploadableReader
                         ->setPropertyName($property->getName());
 
                     $holders[] = $holder;
-                }
+                //}
             }
         }
 
