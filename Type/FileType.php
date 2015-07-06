@@ -69,7 +69,8 @@ class FileType extends AbstractType
         $resolver->setRequired(['entity_class']);
 
         $resolver->setDefaults([
-            'entity_property' => false
+            'entity_property' => false,
+            'required' => false
         ]);
     }
 

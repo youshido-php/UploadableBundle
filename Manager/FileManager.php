@@ -56,17 +56,21 @@ class FileManager extends ContainerAware
      */
     public function processOne(UploadParametersHolder $holder, $beforeValue = false)
     {
-        if ($beforeValue && file_exists($beforeValue)) {
-            $directory = dirname($beforeValue);
-            $name      = $this->namer->getName($holder); //generating only new file name
+        if($holder->getValue() instanceof UploadedFile){
+            if ($beforeValue && file_exists($beforeValue)) {
+                $directory = dirname($beforeValue);
+                $name      = $this->namer->getName($holder); //generating only new file name
 
-            $this->removeFile($beforeValue);
+                $this->removeFile($beforeValue);
 
-            $this->updateEntityValue($holder, $this->moveFile($holder, $directory, $name));
-        } else {
-            if ($relativePath = $this->generatePathAndSave($holder)) {
-                $this->updateEntityValue($holder, $relativePath);
+                $this->updateEntityValue($holder, $this->moveFile($holder, $directory, $name));
+            } else {
+                if ($relativePath = $this->generatePathAndSave($holder)) {
+                    $this->updateEntityValue($holder, $relativePath);
+                }
             }
+        }elseif($beforeValue){
+            $this->updateEntityValue($holder, $beforeValue);
         }
     }
 
