@@ -31,7 +31,7 @@ class FileManager extends ContainerAware
     }
 
     /**
-     * @param UploadParametersHolder[]     $holders
+     * @param UploadParametersHolder[] $holders
      * @param EventArgs|PreUpdateEventArgs $args
      */
     public function processFromListener(array $holders, EventArgs $args)
@@ -52,11 +52,11 @@ class FileManager extends ContainerAware
 
     /**
      * @param UploadParametersHolder $holder
-     * @param string|boolean         $beforeValue
+     * @param string|boolean $beforeValue
      */
     public function processOne(UploadParametersHolder $holder, $beforeValue = false)
     {
-        if($holder->getValue() instanceof UploadedFile){
+        if ($holder->getValue() instanceof UploadedFile) {
             if ($beforeValue && file_exists($beforeValue)) {
                 $directory = dirname($beforeValue);
                 $name      = $this->namer->getName($holder); //generating only new file name
@@ -69,7 +69,7 @@ class FileManager extends ContainerAware
                     $this->updateEntityValue($holder, $relativePath);
                 }
             }
-        }elseif($beforeValue){
+        } elseif ($beforeValue) {
             $this->updateEntityValue($holder, $beforeValue);
         }
     }
@@ -124,9 +124,9 @@ class FileManager extends ContainerAware
     public function removeByHolders(array $holders)
     {
         foreach ($holders as $holder) {
-            $fullPath = $this->baseUploadDir . DIRECTORY_SEPARATOR . $holder->getValue();
-
-            $this->removeFile($fullPath);
+            if ($holder->getValue()) {
+                $this->removeFile($this->baseUploadDir . DIRECTORY_SEPARATOR . $holder->getValue());
+            }
         }
     }
 
