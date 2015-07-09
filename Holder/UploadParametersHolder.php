@@ -65,7 +65,7 @@ class UploadParametersHolder
     }
 
     /**
-     * @return UploadedFile
+     * @return UploadedFile|String
      */
     public function getValue()
     {
