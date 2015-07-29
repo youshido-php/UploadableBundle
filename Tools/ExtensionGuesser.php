@@ -321,6 +321,7 @@ class ExtensionGuesser {
         'image/ief' => 'ief',
         'image/jp2' => 'jp2',
         'image/jpeg' => 'jpg',
+        'image/jpg' => 'jpg',
         'image/jpm' => 'jpm',
         'image/jpx' => 'jpf',
         'image/pict' => 'pic',
