@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use \Symfony\Component\Form\Extension\Core\Type\FileType as BaseFilterType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Youshido\UploadableBundle\Annotations\Reader\UploadableReader;
 
@@ -77,16 +77,6 @@ class FileType extends AbstractType
 
     public function getParent()
     {
-        return 'file';
-    }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'youshido_file';
+        return BaseFilterType::class;
     }
 }
