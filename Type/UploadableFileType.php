@@ -15,11 +15,11 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use \Symfony\Component\Form\Extension\Core\Type\FileType as BaseFilterType;
+use \Symfony\Component\Form\Extension\Core\Type\FileType as BaseFileType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Youshido\UploadableBundle\Annotations\Reader\UploadableReader;
 
-class FileType extends AbstractType
+class UploadableFileType extends AbstractType
 {
 
     /** @var  UploadableReader */
@@ -77,6 +77,6 @@ class FileType extends AbstractType
 
     public function getParent()
     {
-        return BaseFilterType::class;
+        return BaseFileType::class;
     }
 }
