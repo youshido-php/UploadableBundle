@@ -19,7 +19,7 @@ use \Symfony\Component\Form\Extension\Core\Type\FileType as BaseFileType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Youshido\UploadableBundle\Annotations\Reader\UploadableReader;
 
-class UploadableFileType extends AbstractType
+class FileType extends AbstractType
 {
 
     /** @var  UploadableReader */

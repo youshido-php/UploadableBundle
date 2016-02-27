@@ -29,7 +29,7 @@ services:
             - { name: doctrine.event_subscriber, connection: default }
 
     youshido.uploadable.form.type.youshido_file:
-        class: Youshido\UploadableBundle\Type\UploadableFileType
+        class: Youshido\UploadableBundle\Type\FileType
         arguments: [ '@youshido.uploadable.reader', '@validator' ]
         tags:
           - { name: form.type, alias: youshido_file }
