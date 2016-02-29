@@ -19,7 +19,7 @@ use \Symfony\Component\Form\Extension\Core\Type\FileType as BaseFileType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Youshido\UploadableBundle\Annotations\Reader\UploadableReader;
 
-class FileType extends AbstractType
+class UploadableFileType extends AbstractType
 {
 
     /** @var  UploadableReader */
@@ -63,6 +63,11 @@ class FileType extends AbstractType
                     }
                 }
             });
+    }
+
+    public function getPrefix()
+    {
+        return 'uploadable_file';
     }
 
     public function configureOptions(OptionsResolver $resolver)
