@@ -30,44 +30,38 @@ class UploadableFileType extends AbstractType
 
     public function __construct(UploadableReader $reader, ValidatorInterface $validator)
     {
-        $this->reader = $reader;
+        $this->reader    = $reader;
         $this->validator = $validator;
     }
 
     /**
      * @param FormBuilder|FormBuilderInterface $builder
-     * @param array $options
+     * @param array                            $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new FileTypeDataTransformer());
 
-        $reader = $this->reader;
         $builder
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($builder, $reader, $options) {
-                $form = $event->getForm();
-                $data = $form->getData();
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($builder, $options) {
+                $form   = $event->getForm();
+                $data   = $form->getData();
                 $config = $form->getConfig();
 
                 $name = array_key_exists('entity_property', $options) && $options['entity_property'] ? $options['entity_property'] : $config->getName();
 
-                $annotation = $reader->readAnnotationOfProperty($options['entity_class'], $name);
+                $annotation = $this->reader->readAnnotationOfProperty($options['entity_class'], $name);
 
                 if ($annotation && is_array($annotation->getAsserts())) {
                     $errors = $this->validator->validate($data, $annotation->getAsserts());
 
                     if (count($errors) > 0) {
-                        foreach($errors as $error){
+                        foreach ($errors as $error) {
                             $form->addError(new FormError($error->getMessage()));
                         }
                     }
                 }
             });
-    }
-
-    public function getPrefix()
-    {
-        return 'uploadable_file';
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -76,7 +70,7 @@ class UploadableFileType extends AbstractType
 
         $resolver->setDefaults([
             'entity_property' => false,
-            'required' => false
+            'required'        => false
         ]);
     }
 
