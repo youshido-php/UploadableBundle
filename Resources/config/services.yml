@@ -1,19 +1,19 @@
 parameters:
     youshido.uploadable.namer: Youshido\UploadableBundle\Tools\Namer\Md5HashNamer
-    youshido.uploadable.base_upload_dir: %kernel.root_dir%/../web
+    youshido.uploadable.base_upload_dir: '%kernel.root_dir%/../web'
 
 services:
     youshido.uploadable.reader:
         class: Youshido\UploadableBundle\Annotations\Reader\UploadableReader
 
     youshido.uploadable.namer:
-        class: %youshido.uploadable.namer%
+        class: '%youshido.uploadable.namer%'
 
     youshido.uploadable.file_manager:
         class: Youshido\UploadableBundle\Manager\FileManager
         arguments: [ '@youshido.uploadable.namer' ]
         calls:
-            - [ setBaseUploadDir, [%youshido.uploadable.base_upload_dir%] ]
+            - [ setBaseUploadDir, ['%youshido.uploadable.base_upload_dir%'] ]
             - [ setContainer, ['@service_container']]
 
     youshido.uploadable.enity_manager:

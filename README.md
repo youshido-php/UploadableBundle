@@ -37,7 +37,7 @@ class Post
 $post = new Post();
 
 $form = $this->createFormBuilder($post, ['action' => $this->generateUrl('example1')])
-    ->add('path', 'youshido_file', ['entity_class' => 'AppBundle\Entity\Post'])
+    ->add('path', 'Youshido\UploadableBundle\Type\UploadableFileType', ['entity_class' => 'AppBundle\Entity\Post'])
     ->add('submit', 'submit')
     ->getForm();
 
